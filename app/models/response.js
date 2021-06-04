@@ -15,7 +15,7 @@ const responseSchema = new mongoose.Schema({
   },
   game: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Game',
+    ref: 'Gameboard',
     required: true
   }],
   question: [{

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const gameSchema = new mongoose.Schema({
+const gameboardSchema = new mongoose.Schema({
   questions: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Question',
@@ -34,4 +34,4 @@ const gameSchema = new mongoose.Schema({
   timestamps: true
 })
 
-module.exports = mongoose.model('Game', gameSchema)
+module.exports = mongoose.model('Gameboard', gameboardSchema)
