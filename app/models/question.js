@@ -6,8 +6,8 @@ const questionSchema = new mongoose.Schema({
     required: true
   },
   answers: [{
-    answer: String,
-    correct: Boolean,
+    answerText: String,
+    isCorrect: Boolean,
     default: false
   }],
   category: {
@@ -16,16 +16,8 @@ const questionSchema = new mongoose.Schema({
     enum: ['Potpourri', 'Science', 'Web Dev'],
     required: true
   },
-  // if the block has been handled
-  answered: {
-    type: Boolean,
-    default: false,
-    required: true
-  },
-  // is the handled answer correct?
-  correct: {
-    type: Boolean,
-    default: false,
+  score: {
+    type: Number,
     required: true
   }
 }, {

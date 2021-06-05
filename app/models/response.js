@@ -1,16 +1,14 @@
 const mongoose = require('mongoose')
 
 const responseSchema = new mongoose.Schema({
-  // if the block has been handled
-  answered: {
-    type: Boolean,
-    default: false,
-    required: true
-  },
   // is the handled answer correct?
   correct: {
     type: Boolean,
     default: false,
+    required: true
+  },
+  answer: {
+    type: String,
     required: true
   },
   game: [{

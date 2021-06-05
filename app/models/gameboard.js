@@ -16,11 +16,11 @@ const gameboardSchema = new mongoose.Schema({
     ref: 'Response',
     required: true
   }],
-  score: {
+  totalScore: {
     type: Number,
     required: true
   },
-  over: {
+  isOver: {
     type: Boolean,
     default: false,
     required: true
