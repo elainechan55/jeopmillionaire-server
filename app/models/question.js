@@ -13,7 +13,7 @@ const questionSchema = new mongoose.Schema({
   category: {
     type: String,
     // add more categories v2
-    enum: ['Potpourri', 'Science', 'Web Dev'],
+    enum: ['Pop Culture', 'Science', 'Web Dev Abbreviations', 'The 70s Movies & Music', 'The 80s', 'The 90s'],
     required: true
   },
   score: {

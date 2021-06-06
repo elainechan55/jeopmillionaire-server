@@ -5,6 +5,7 @@ const passport = require('passport')
 
 // pull in Mongoose model for gameboards
 const Gameboard = require('../models/gameboard')
+const gameboardService = require('../services/gameboardService')
 
 // this is a collection of methods that help us detect situations when we need
 // to throw a custom error
@@ -27,6 +28,26 @@ const requireToken = passport.authenticate('bearer', { session: false })
 // instantiate a router (mini app that only handles routes)
 const router = express.Router()
 
+// CREATE
+// POST /gameboards
+router.post('/gameboards', requireToken, async (req, res, next) => {
+  // set owner of new gameboard to be current user
+  const user = req.user.id
+  console.log('req', req)
+
+  const gameboard = await gameboardService.createGameboardAsync(user)
+
+  Gameboard.create(gameboard)
+    // respond to succesful `create` with status 201 and JSON of new "gameboard"
+    .then(gameboard => {
+      res.status(201).json({ gameboard: gameboard.toObject() })
+    })
+    // if an error occurs, pass it off to our error handler
+    // the error handler needs the error message and the `res` object so that it
+    // can send an error message back to the client
+    .catch(next)
+})
+
 // INDEX
 // GET /gameboards
 router.get('/gameboards', requireToken, (req, res, next) => {
@@ -45,30 +66,13 @@ router.get('/gameboards', requireToken, (req, res, next) => {
 
 // SHOW
 // GET /gameboards/5a7db6c74d55bc51bdf39793
-router.get('/gameboards/:gameboardid', requireToken, (req, res, next) => {
+router.get('/gameboards/:id', requireToken, (req, res, next) => {
   // req.params.id will be set based on the `:id` in the route
   Gameboard.findById(req.params.id)
     .then(handle404)
     // if `findById` is succesful, respond with 200 and "gameboard" JSON
     .then(gameboard => res.status(200).json({ gameboard: gameboard.toObject() }))
     // if an error occurs, pass it to the handler
-    .catch(next)
-})
-
-// CREATE
-// POST /gameboards
-router.post('/gameboards', requireToken, (req, res, next) => {
-  // set owner of new gameboard to be current user
-  req.body.gameboard.owner = req.user.id
-
-  Gameboard.create(req.body.gameboard)
-    // respond to succesful `create` with status 201 and JSON of new "gameboard"
-    .then(gameboard => {
-      res.status(201).json({ gameboard: gameboard.toObject() })
-    })
-    // if an error occurs, pass it off to our error handler
-    // the error handler needs the error message and the `res` object so that it
-    // can send an error message back to the client
     .catch(next)
 })
 

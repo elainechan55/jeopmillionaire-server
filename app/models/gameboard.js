@@ -6,11 +6,11 @@ const gameboardSchema = new mongoose.Schema({
     ref: 'Question',
     required: true
   }],
-  categories: [{
-    type: String,
-    // add more categories v2
-    enum: ['Potpourri', 'Science', 'Web Dev']
-  }],
+  // categories: [{
+  //   type: String,
+  //   // add more categories v2
+  //   enum: ['Potpourri', 'Science', 'Web Dev']
+  // }],
   responses: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Response',
