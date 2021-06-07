@@ -51,17 +51,21 @@ router.post('/gameboards', requireToken, async (req, res, next) => {
 // INDEX
 // GET /gameboards
 router.get('/gameboards', requireToken, (req, res, next) => {
-  Gameboard.find()
-    .then(gameboards => {
+  Gameboard.find({ owner: req.user })
+    .populate('questions')
+    .populate('responses')
+    .exec((err, gameboards) => {
+      if (err) {
+        res.status(500).json({ err: err })
+      }
       // `gameboards` will be an array of Mongoose documents
       // we want to convert each one to a POJO, so we use `.map` to
       // apply `.toObject` to each one
-      return gameboards.map(gameboard => gameboard.toObject())
+      const gameboardObjects = gameboards.map(gameboard => gameboard.toObject())
+      res.status(200).json({ gameboards: gameboardObjects })
     })
     // respond with status 200 and JSON of the gameboards
-    .then(gameboards => res.status(200).json({ gameboards: gameboards }))
     // if an error occurs, pass it to the handler
-    .catch(next)
 })
 
 // SHOW
@@ -69,11 +73,18 @@ router.get('/gameboards', requireToken, (req, res, next) => {
 router.get('/gameboards/:id', requireToken, (req, res, next) => {
   // req.params.id will be set based on the `:id` in the route
   Gameboard.findById(req.params.id)
-    .then(handle404)
-    // if `findById` is succesful, respond with 200 and "gameboard" JSON
-    .then(gameboard => res.status(200).json({ gameboard: gameboard.toObject() }))
-    // if an error occurs, pass it to the handler
-    .catch(next)
+    .populate('questions')
+    .populate('responses')
+    .exec((err, gameboard) => {
+      if (err) {
+        res.status(500).json({ err: err })
+        return
+      }
+      // `gameboards` will be an array of Mongoose documents
+      // we want to convert each one to a POJO, so we use `.map` to
+      // apply `.toObject` to each one
+      res.status(200).json({ gameboard: gameboard.toObject() })
+    })
 })
 
 // UPDATE
@@ -100,7 +111,7 @@ router.patch('/gameboards/:id', requireToken, removeBlanks, (req, res, next) => 
         .populate('responses')
         .exec((err, gameboard) => {
           if (err) {
-            console.error(err)
+            res.status(500).json({ err: err })
           }
           res.status(200).json({ gameboard: gameboard.toObject() })
         })
