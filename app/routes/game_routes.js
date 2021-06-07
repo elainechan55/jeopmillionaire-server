@@ -94,7 +94,19 @@ router.patch('/gameboards/:id', requireToken, removeBlanks, (req, res, next) => 
       return gameboard.updateOne(req.body.gameboard)
     })
     // if that succeeded, return 204 and no JSON
-    .then(() => res.sendStatus(204))
+    .then((gameboard) => {
+      Gameboard.findById(req.params.id)
+        .populate('questions')
+        .populate('responses')
+        .exec((err, gameboard) => {
+          if (err) {
+            console.error(err)
+          }
+          res.status(200).json({ gameboard: gameboard.toObject() })
+        })
+      // console.log('updated gameboard:', gameboard)
+      // res.status(200).json({ gameboard: gameboard.toObject() })
+    })
     // if an error occurs, pass it to the handler
     .catch(next)
 })
