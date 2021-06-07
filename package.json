@@ -1,5 +1,5 @@
 {
-  "name": "game-server",
+  "name": "jeopMillionaire-server",
   "version": "0.0.1",
   "description": "",
   "main": "server.js",
