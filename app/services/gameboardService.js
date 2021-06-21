@@ -11,7 +11,6 @@ const createGameboardAsync = async function (userId) {
   let questions = await Question.find({ category: { $in: categories } })
   questions = _.orderBy(questions, ['category', 'score'], ['asc', 'asc'])
 
-  console.log('found questions:', questions)
   const gameboard = {
     questions: questions,
     totalScore: 0,
