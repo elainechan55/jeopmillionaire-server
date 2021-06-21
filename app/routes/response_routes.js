@@ -31,7 +31,6 @@ const router = express.Router()
 router.post('/responses', requireToken, (req, res, next) => {
   // set owner of new gameboard to be current user
   const user = req.user.id
-  console.log('req', req)
   req.body.response.owner = user
 
   Response.create(req.body.response)
